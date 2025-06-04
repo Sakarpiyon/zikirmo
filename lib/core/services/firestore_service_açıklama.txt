@@ -1,0 +1,65 @@
+# firestore_service.dart Açıklama Dosyası
+
+## Dosya Amacı
+`firestore_service.dart`, Zikir Matik uygulamasında Firestore veritabanı işlemlerini yönetir. Zorluklar, mükemmel hafta ve özel zikir için yeni fonksiyonlar eklendi.
+
+## Dosya Konumu
+- **Yer**: `lib/core/services/firestore_service.dart`
+- **Klasör Amacı**: `core/services` klasörü, temel servisleri barındırır.
+
+## İçerik ve Kullanım
+- **FirestoreService Sınıfı**:
+  - `startChallenge`: Kullanıcı için yeni bir zorluk başlatır.
+  - `updateChallengeProgress`: Zorluk ilerlemesini günceller, tamamlanırsa puan ve rozet verir.
+  - `updateStreak`: Mükemmel hafta rozeti için 7 günlük hedef kontrolü.
+  - Mevcut: Kullanıcı, puan, rozet, lider tablosu ve zikir işlemleri.
+- **Kullanım**:
+  - `zikir_counter_screen.dart`’ta zikir sayımı sonrası `updateChallengeProgress` çağrılır.
+  - `home_screen.dart`’ta zorluk başlatma.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/core/services` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `cloud_firestore`.
+3. **Firestore Yapısı**:
+   - `challenges` koleksiyonu:
+     ```json
+     {
+       "id": "1000_zikir_week",
+       "name": "Haftalık 1000 Zikir",
+       "description": "Bir haftada 1000 zikir tamamla!",
+       "points": 100,
+       "badgeId": "challenge_1000",
+       "durationDays": 7,
+       "targetZikirCount": 1000
+     }
+     ```
+   - `user_challenges` koleksiyonu:
+     ```json
+     {
+       "userId": "user123",
+       "challengeId": "1000_zikir_week",
+       "startDate": "2025-05-17T12:00:00Z",
+       "progress": 500,
+       "completed": false
+     }
+     ```
+4. **Güvenlik Kuralları**:
+   - `firestore.rules`’a ek:
+     ```plaintext
+     match /challenges/{challengeId} {
+       allow read: if true;
+       allow write: if request.auth != null && request.auth.token.admin == true;
+     }
+     match /user_challenges/{challengeId} {
+       allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+     }
+     ```
+
+## Önemli Notlar
+- **Güncelleme**: Zorluklar, mükemmel hafta ve özel zikir entegrasyonu eklendi.
+- **Flutter Uyumluluğu**: Flutter 3.x ile uyumludur.
+- **Test**: Zorluk ilerlemesi ve mükemmel hafta rozetinin doğru tetiklendiğini kontrol edin.
+
+# Dosya Sonu: lib/core/services/firestore_service_açıklama.txt

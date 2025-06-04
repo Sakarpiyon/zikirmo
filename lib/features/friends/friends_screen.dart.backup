@@ -1,0 +1,502 @@
+﻿// friends_screen.dart - v1.0.0
+// Arkadaş listesi ekranı
+// Klasör: lib/features/friends/friends_screen.dart
+
+import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:zikirmo_new/core/models/user_model.dart';
+import 'package:zikirmo_new/core/services/auth_service.dart';
+import 'package:zikirmo_new/core/services/firestore_service.dart';
+import 'package:zikirmo_new/routes.dart';
+
+// Arkadaş listesini getiren provider
+final friendsProvider = FutureProvider<List<UserModel>>((ref) async {
+  final authService = ref.watch(authServiceProvider);
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  final userId = authService.currentUser?.uid;
+  
+  if (userId == null) return [];
+  
+  return await firestoreService.getFriends(userId);
+});
+
+// Arkadaşlık isteklerini getiren provider
+final friendRequestsProvider = FutureProvider<List<UserModel>>((ref) async {
+  final authService = ref.watch(authServiceProvider);
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  final userId = authService.currentUser?.uid;
+  
+  if (userId == null) return [];
+  
+  return await firestoreService.getFriendRequests(userId);
+});
+
+class FriendsScreen extends ConsumerWidget {
+  const FriendsScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final friendsAsync = ref.watch(friendsProvider);
+    final friendRequestsAsync = ref.watch(friendRequestsProvider);
+    
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('friends'.tr()),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person_search),
+            tooltip: 'Kullanıcı Ara'.tr(),
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.userSearch);
+            },
+          ),
+        ],
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          ref.refresh(friendsProvider);
+          ref.refresh(friendRequestsProvider);
+        },
+        child: DefaultTabController(
+          length: 2,
+          child: Column(
+            children: [
+              // Tab bar
+              TabBar(
+                tabs: [
+                  Tab(text: 'Arkadaşlar'.tr()),
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('İstekler'.tr()),
+                        const SizedBox(width: 4),
+                        friendRequestsAsync.when(
+                          data: (requests) => requests.isNotEmpty
+                              ? Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Text(
+                                    requests.length.toString(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox(),
+                          loading: () => const SizedBox(),
+                          error: (_, __) => const SizedBox(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              
+              // Tab içerikleri
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    // Arkadaşlar tab'ı
+                    friendsAsync.when(
+                      data: (friends) => friends.isEmpty
+                          ? _buildEmptyState(
+                              context,
+                              Icons.people,
+                              'noFriends'.tr(),
+                              'Arkadaş eklemek için sağ üstteki arama simgesine dokunun.'.tr(),
+                            )
+                          : _buildFriendsList(context, ref, friends),
+                      loading: () => const Center(child: CircularProgressIndicator()),
+                      error: (_, __) => Center(
+                        child: Text('errorLoadingFriends'.tr()),
+                      ),
+                    ),
+                    
+                    // İstekler tab'ı
+                    friendRequestsAsync.when(
+                      data: (requests) => requests.isEmpty
+                          ? _buildEmptyState(
+                              context,
+                              Icons.inbox,
+                              'Arkadaşlık İsteği Yok'.tr(),
+                              'Yeni arkadaşlık istekleri burada görünecek.'.tr(),
+                            )
+                          : _buildRequestsList(context, ref, requests),
+                      loading: () => const Center(child: CircularProgressIndicator()),
+                      error: (_, __) => Center(
+                        child: Text('Arkadaşlık istekleri yüklenirken hata oluştu.'.tr()),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, AppRoutes.userSearch);
+        },
+        tooltip: 'Kullanıcı Ara'.tr(),
+        child: const Icon(Icons.person_add),
+      ),
+    );
+  }
+  
+  // Boş durum widget'ı
+  Widget _buildEmptyState(
+    BuildContext context,
+    IconData icon,
+    String title,
+    String message,
+  ) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 80,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.titleLarge,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              message,
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  // Arkadaş listesi widget'ı
+  Widget _buildFriendsList(
+    BuildContext context,
+    WidgetRef ref,
+    List<UserModel> friends,
+  ) {
+    return ListView.builder(
+      itemCount: friends.length,
+      itemBuilder: (context, index) {
+        final friend = friends[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.2),
+              backgroundImage: friend.profileImageUrl != null
+                  ? NetworkImage(friend.profileImageUrl!)
+                  : null,
+              child: friend.profileImageUrl == null
+                  ? Text(
+                      _getInitials(friend.nickname),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  : null,
+            ),
+            title: Row(
+              children: [
+                Text(friend.nickname),
+                if (friend.isPremium) 
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: Icon(
+                      Icons.verified,
+                      color: Colors.amber[700],
+                      size: 16,
+                    ),
+                  ),
+              ],
+            ),
+            subtitle: Text('level'.tr(args: [friend.level.tr()])),
+            trailing: IconButton(
+              icon: const Icon(Icons.more_vert),
+              onPressed: () {
+                _showFriendOptionsMenu(context, ref, friend);
+              },
+            ),
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.friendProfile,
+                arguments: friend.id,
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+  
+  // Arkadaşlık istekleri listesi widget'ı
+  Widget _buildRequestsList(
+    BuildContext context,
+    WidgetRef ref,
+    List<UserModel> requests,
+  ) {
+    return ListView.builder(
+      itemCount: requests.length,
+      itemBuilder: (context, index) {
+        final request = requests[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.2),
+              backgroundImage: request.profileImageUrl != null
+                  ? NetworkImage(request.profileImageUrl!)
+                  : null,
+              child: request.profileImageUrl == null
+                  ? Text(
+                      _getInitials(request.nickname),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  : null,
+            ),
+            title: Text(request.nickname),
+            subtitle: Text('Arkadaşlık isteği gönderdi'.tr()),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Kabul et butonu
+                IconButton(
+                  icon: const Icon(Icons.check, color: Colors.green),
+                  tooltip: 'Kabul Et'.tr(),
+                  onPressed: () => _acceptFriendRequest(context, ref, request.id),
+                ),
+                // Reddet butonu
+                IconButton(
+                  icon: const Icon(Icons.close, color: Colors.red),
+                  tooltip: 'Reddet'.tr(),
+                  onPressed: () => _rejectFriendRequest(context, ref, request.id),
+                ),
+              ],
+            ),
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.friendProfile,
+                arguments: request.id,
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+  
+  // Arkadaş seçenekleri menüsü
+  void _showFriendOptionsMenu(
+    BuildContext context,
+    WidgetRef ref,
+    UserModel friend,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: Text('Profili Görüntüle'.tr()),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(
+                    context,
+                    AppRoutes.friendProfile,
+                    arguments: friend.id,
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.message),
+                title: Text('Mesaj Gönder'.tr()),
+                onTap: () {
+                  Navigator.pop(context);
+                  // TODO: Mesaj gönderme sayfasına git
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.card_giftcard),
+                title: Text('Hediye Gönder'.tr()),
+                onTap: () {
+                  Navigator.pop(context);
+                  // TODO: Hediye gönderme sayfasına git
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.person_remove, color: Colors.red),
+                title: Text(
+                  'Arkadaşlıktan Çıkar'.tr(),
+                  style: const TextStyle(color: Colors.red),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _removeFriend(context, ref, friend.id);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  
+  // Arkadaşlık isteğini kabul et
+  Future<void> _acceptFriendRequest(
+    BuildContext context,
+    WidgetRef ref,
+    String userId,
+  ) async {
+    final authService = ref.read(authServiceProvider);
+    final firestoreService = ref.read(firestoreServiceProvider);
+    final currentUserId = authService.currentUser?.uid;
+    
+    if (currentUserId == null) return;
+    
+    try {
+      await firestoreService.acceptFriendRequest(currentUserId, userId);
+      
+      // Arkadaş listesini yenile
+      ref.refresh(friendsProvider);
+      ref.refresh(friendRequestsProvider);
+      
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Arkadaşlık isteği kabul edildi'.tr())),
+       );
+     }
+   } catch (e) {
+     if (context.mounted) {
+       ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(content: Text('Bir hata oluştu'.tr())),
+       );
+     }
+   }
+ }
+ 
+ // Arkadaşlık isteğini reddet
+ Future<void> _rejectFriendRequest(
+   BuildContext context,
+   WidgetRef ref,
+   String userId,
+ ) async {
+   final authService = ref.read(authServiceProvider);
+   final firestoreService = ref.read(firestoreServiceProvider);
+   final currentUserId = authService.currentUser?.uid;
+   
+   if (currentUserId == null) return;
+   
+   try {
+     await firestoreService.rejectFriendRequest(currentUserId, userId);
+     
+     // Arkadaşlık isteklerini yenile
+     ref.refresh(friendRequestsProvider);
+     
+     if (context.mounted) {
+       ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(content: Text('Arkadaşlık isteği reddedildi'.tr())),
+       );
+     }
+   } catch (e) {
+     if (context.mounted) {
+       ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(content: Text('Bir hata oluştu'.tr())),
+       );
+     }
+   }
+ }
+ 
+ // Arkadaşı kaldır
+ Future<void> _removeFriend(
+   BuildContext context,
+   WidgetRef ref,
+   String userId,
+ ) async {
+   final authService = ref.read(authServiceProvider);
+   final firestoreService = ref.read(firestoreServiceProvider);
+   final currentUserId = authService.currentUser?.uid;
+   
+   if (currentUserId == null) return;
+   
+   // Onay dialog'u
+   final confirm = await showDialog<bool>(
+     context: context,
+     builder: (context) => AlertDialog(
+       title: Text('Arkadaşı Kaldır'.tr()),
+       content: Text('Bu kişiyi arkadaş listenizden kaldırmak istediğinizden emin misiniz?'.tr()),
+       actions: [
+         TextButton(
+           onPressed: () => Navigator.pop(context, false),
+           child: Text('cancel'.tr()),
+         ),
+         TextButton(
+           onPressed: () => Navigator.pop(context, true),
+           child: Text('Kaldır'.tr()),
+         ),
+       ],
+     ),
+   );
+   
+   if (confirm != true) return;
+   
+   try {
+     await firestoreService.removeFriend(currentUserId, userId);
+     
+     // Arkadaş listesini yenile
+     ref.refresh(friendsProvider);
+     
+     if (context.mounted) {
+       ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(content: Text('Arkadaşlıktan çıkarıldı'.tr())),
+       );
+     }
+   } catch (e) {
+     if (context.mounted) {
+       ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(content: Text('Bir hata oluştu'.tr())),
+       );
+     }
+   }
+ }
+ 
+ // İsmin baş harflerini al
+ String _getInitials(String name) {
+   if (name.isEmpty) return '';
+   
+   final nameParts = name.split(' ');
+   String initials = '';
+   
+   for (var part in nameParts) {
+     if (part.isNotEmpty) {
+       initials += part[0].toUpperCase();
+       if (initials.length >= 2) break;
+     }
+   }
+   
+   return initials;
+ }
+}

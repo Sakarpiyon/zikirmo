@@ -1,0 +1,41 @@
+# membership_info_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`membership_info_screen.dart`, Zikir Matik uygulamasında freemium ve premium üyelik seçeneklerini ve özelliklerini tanıtan ekranı tanımlar.
+
+## Dosya Konumu
+- **Yer**: `lib/features/membership/membership_info_screen.dart`
+- **Klasör Amacı**: `features/membership` klasörü, üyelikle ilgili ekranları barındırır.
+
+## İçerik ve Kullanım
+- **MembershipInfoScreen Widget**:
+  - Freemium ve premium üyelik kartları gösterir.
+  - `_getPriceByRegion`: Kullanıcının bölge koduna göre fiyat belirler (TR: 29 TL, AB: 0.99 EUR, diğer: 0.99 USD).
+  - `build`: Kartlar ve "Başla" butonu içerir.
+- **UI Elemanları**:
+  - `AppBar`: Ekran başlığı (`membershipInfoTitle`).
+  - `Card`: Freemium ve premium için ayrı kartlar.
+  - `ElevatedButton`: Giriş ekranına yönlendirme.
+- **Kullanım**:
+  - `home_screen.dart`’tan login olmayan kullanıcılar için yönlendirme.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - `lib/features/membership` klasörü oluşturun ve dosyayı yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`: Temel widget’lar.
+   - `easy_localization`: Çoklu dil desteği.
+3. **Rota Tanımlaması**:
+   - `routes.dart`’ta `/membership_info` rotası tanımlanmalı.
+4. **Çeviri Güncellemesi**:
+   - `app_tr.arb` ve `app_en.arb`’a yeni çeviriler eklenmeli.
+
+## Önemli Notlar
+- **Flutter Uyumluluğu**: Flutter 3.x ile uyumludur.
+- **Gelecek Genişletmeler**: Abonelik satın alma butonu eklenebilir.
+
+## Sonraki Adımlar
+- `home_screen.dart`’ta yönlendirme eklenecek.
+- Çeviri dosyaları güncellenecek.
+
+# Dosya Sonu: lib/features/membership/membership_info_screen_açıklama.txt

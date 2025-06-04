@@ -1,0 +1,1 @@
+for /r %f in (*.dart) do @(echo ==================== >> proje.txt & echo Dosya: %f >> proje.txt & echo ==================== >> proje.txt & echo. >> proje.txt & type "%f" >> proje.txt & echo. >> proje.txt & echo. >> proje.txt)

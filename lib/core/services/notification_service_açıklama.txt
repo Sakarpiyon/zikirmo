@@ -1,0 +1,33 @@
+# notification_service.dart Açıklama Dosyası
+
+## Dosya Amacı
+`notification_service.dart`, Zikir Matik uygulamasında push bildirimleri ve achievement bildirimlerini yönetir.
+
+## Dosya Konumu
+- **Yer**: `lib/core/services/notification_service.dart`
+- **Klasör Amacı**: `core/services` klasörü, temel servisleri barındırır.
+
+## İçerik ve Kullanım
+- **NotificationService Sınıfı**:
+  - `initialize`: FCM ve yerel bildirimleri başlatır.
+  - `sendAchievementNotification`: Achievement bildirimi gönderir.
+  - `subscribeToTopic`, `unsubscribeFromTopic`: Bildirim abonelikleri.
+- **Kullanım**:
+  - Örnek: Rozet bildirimi:
+    ```dart
+    await notificationService.sendAchievementNotification(userId, 'streak7Days'.tr(), 'streak7DaysDesc'.tr());
+    ```
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/core/services` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `firebase_messaging`, `flutter_local_notifications`.
+3. **Firebase Yapılandırması**:
+   - FCM için `google-services.json` ve `GoogleService-Info.plist` eklenmeli.
+
+## Önemli Notlar
+- **Flutter Uyumluluğu**: Flutter 3.x ile uyumludur.
+- **Güvenlik**: FCM token’ları güvenli saklanmalı.
+
+# Dosya Sonu: lib/core/services/notification_service_açıklama.txt

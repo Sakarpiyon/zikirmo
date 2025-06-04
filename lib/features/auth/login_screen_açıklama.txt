@@ -1,0 +1,36 @@
+# login_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`login_screen.dart`, Zikir Matik uygulamasında kullanıcıların giriş yapabileceği ekranı tanımlar, üyelik tanıtım ekranına yönlendirme içerir.
+
+## Dosya Konumu
+- **Yer**: `lib/features/auth/login_screen.dart`
+- **Klasör Amacı**: `features/auth` klasörü, kimlik doğrulama ekranlarını barındırır.
+
+## İçerik ve Kullanım
+- **LoginScreen Widget**:
+  - `_signIn`, `_signInWithGoogle`, `_signInWithApple`: Giriş yöntemleri.
+  - `build`: E-posta/şifre formu, Google/Apple giriş butonları, yönlendirme butonları.
+- **UI Elemanları**:
+  - `AppBar`: Ekran başlığı (`buttonSignIn`).
+  - `Form`: E-posta/şifre girişi ve doğrulama.
+  - `ElevatedButton`: Giriş ve sosyal medya giriş butonları.
+  - `TextButton`: Şifre sıfırlama, kayıt ve üyelik tanıtım yönlendirmeleri.
+- **Kullanım**:
+  - `home_screen.dart`’tan login olmayan kullanıcılar için erişilir.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/features/auth` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`, `easy_localization`, `firebase_auth`, `google_sign_in`, `sign_in_with_apple`.
+
+## Önemli Notlar
+- **Güncelleme**: Üyelik tanıtım butonu eklendi.
+- **Flutter Uyumluluğu**: Flutter 3.x ile uyumludur.
+
+## Sonraki Adımlar
+- `pubspec.yaml` güncellenecek.
+- Çeviri dosyaları güncellenecek.
+
+# Dosya Sonu: lib/features/auth/login_screen_açıklama.txt

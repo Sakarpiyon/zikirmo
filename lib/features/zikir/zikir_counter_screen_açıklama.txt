@@ -1,0 +1,31 @@
+# zikir_counter_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`zikir_counter_screen.dart`, Zikir Matik uygulamasında zikir sayacı ekranını tanımlar, tıklama ve hedef tamamlamada puan ekler.
+
+## Dosya Konumu
+- **Yer**: `lib/features/zikir/zikir_counter_screen.dart`
+- **Klasör Amacı**: `features/zikir` klasörü, zikir ile ilgili ekranları barındırır.
+
+## İçerik ve Kullanım
+- **ZikirCounterScreen Widget**:
+  - `_checkFirstZikir`: İlk zikir için rozet ve puan.
+  - `_incrementCounter`: Tıklama, hedef ve rozet kontrolü.
+  - `build`: Sayaç ve hedef gösterimi.
+- **UI Elemanları**:
+  - `AppBar`: Zikir adı.
+  - `ElevatedButton`: Tıklama butonu.
+- **Kullanım**:
+  - `home_screen.dart`’tan yönlendirme.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/features/zikir` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`, `easy_localization`, `flutter_riverpod`, `vibration`.
+
+## Önemli Notlar
+- **Güncelleme**: Puanlama ve rozet entegrasyonu eklendi.
+- **Flutter Uyumluluğu**: Flutter 3.x ile uyumludur.
+
+# Dosya Sonu: lib/features/zikir/zikir_counter_screen_açıklama.txt

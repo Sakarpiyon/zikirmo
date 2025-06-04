@@ -1,0 +1,49 @@
+# zikir_model.dart Açıklama Dosyası
+
+## Dosya Amacı
+`zikir_model.dart`, Zikir Matik uygulamasında zikir verilerini temsil eden veri modelini tanımlar. Firestore’dan alınan verileri yapılandırılmış bir şekilde işlemek için kullanılır.
+
+## Dosya Konumu
+- **Yer**: `lib/core/models/zikir_model.dart`
+- **Klasör Amacı**: `core/models` klasörü, uygulamanın veri modellerini barındırır.
+
+## İçerik ve Kullanım
+- **ZikirModel Sınıfı**:
+  - `id`: Zikirin benzersiz kimliği.
+  - `title`: Çoklu dil destekli başlık (örneğin, `{tr: "Subhanallah", en: "Glory to Allah"}`).
+  - `description`: Çoklu dil destekli açıklama.
+  - `categoryId`: Zikirin kategorisi.
+  - `requiredCount`: Tamamlanması gereken sayı.
+  - `purpose`: Çoklu dil destekli amaç.
+  - `createdAt`: Oluşturma tarihi.
+  - `createdBy`: Oluşturan adminin kimliği.
+- **Metotlar**:
+  - `fromMap`: Firestore’dan alınan veriyi `ZikirModel`’e dönüştürür.
+  - `toMap`: `ZikirModel`’ü Firestore’a kaydedilecek formata çevirir.
+- **Kullanım**:
+  - `firestore_service.dart`’ta zikir verilerini işlemek için kullanılır:
+    ```dart
+    final zikirs = await FirestoreService().getZikirs();
+    final zikirModels = zikirs.map((data) => ZikirModel.fromMap(data['id'], data)).toList();
+    ```
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/core/models` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - Ek bir paket gerekmez, sadece Dart’ın temel türleri kullanılır.
+3. **Firestore Entegrasyonu**:
+   - `firestore_service.dart`’ta `ZikirModel`’ün `fromMap` ve `toMap` metotları kullanılır.
+4. **Veri Yapısı**:
+   - `zikir-mat-Firestore Veri Mimarisi.txt`’te tanımlı `zikirs` koleksiyonuyla uyumlu olmalı.
+
+## Önemli Notlar
+- **Tip Güvenliği**: `Map<String, String>` ile çoklu dil desteği sağlanır.
+- **Null Güvenliği**: Tüm alanlar `required` olarak işaretlendi, null kontrolü `fromMap`’te yapılır.
+- **Flutter Uyumluluğu**: Kod, Flutter 3.x ile uyumludur.
+- **Gelecek Genişletmeler**: Zikir için ses dosyası veya ek özellikler eklenebilir.
+
+## Sonraki Adımlar
+- `home_screen.dart`’a `ZikirModel` ve `FirestoreService` entegrasyonu eklenecek.
+- Diğer modeller (`user_model.dart`, `category_model.dart` vb.) oluşturulacak.
+- Zikir listesi dinamik hale getirilecek.

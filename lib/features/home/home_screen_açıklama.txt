@@ -1,0 +1,33 @@
+# home_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`home_screen.dart`, Zikir Matik uygulamasının ana ekranını tanımlar. Zorluk kartları eklendi.
+
+## Dosya Konumu
+- **Yer**: `lib/features/home/home_screen.dart`
+- **Klasör Amacı**: `features/home` klasörü, ana ekranı barındırır.
+
+## İçerik ve Kullanım
+- **HomeScreen Widget**:
+  - `challengesProvider`: Mevcut zorlukları çeker.
+  - `userChallengesProvider`: Kullanıcının aktif zorluklarını çeker.
+  - `build`: Hoş geldin kartı, popüler zikirler, zorluk kartları ve navigasyon.
+- **UI Elemanları**:
+  - `AppBar`: Başlık ve profil butonu.
+  - `Card`: Zorluk kartları (başlatma butonu veya ilerleme).
+  - `BottomNavigationBar`: Ana navigasyon.
+- **Kullanım**:
+  - Uygulamanın ana giriş noktası.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/features/home` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`, `easy_localization`, `flutter_riverpod`.
+
+## Önemli Notlar
+- **Güncelleme**: Zorluk kartları eklendi.
+- **Flutter Uyumluluğu**: Flutter 3.x ile uyumludur.
+- **Test**: Zorluk başlatma ve ilerleme göstergesini kontrol edin.
+
+# Dosya Sonu: lib/features/home/home_screen_açıklama.txt

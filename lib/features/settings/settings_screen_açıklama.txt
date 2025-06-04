@@ -1,0 +1,57 @@
+# settings_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`settings_screen.dart`, Zikir Matik uygulamasında kullanıcıların dil, bildirim zamanlaması ve profil ayarlarına erişebileceği ekranı tanımlar.
+
+## Dosya Konumu
+- **Yer**: `lib/features/settings/settings_screen.dart`
+- **Klasör Amacı**: `features/settings` klasörü, ayarlarla ilgili ekranları barındırır.
+
+## İçerik ve Kullanım
+- **SettingsScreen Widget**:
+  - `ConsumerStatefulWidget` olarak tanımlanır, Riverpod ile durum yönetimi için.
+  - `_selectReminderTime`: Zikir hatırlatma saatini seçer ve `NotificationService` ile planlar.
+  - `_changeLanguage`: Uygulama dilini değiştirir.
+  - `build`: Dil seçimi, bildirim zamanı ve profil yönlendirme UI’sını içerir.
+- **UI Elemanları**:
+  - `AppBar`: Ekran başlığı (`settings`).
+  - `ListTile`: Dil seçimi ve bildirim zamanı ayarları.
+  - `DropdownButton`: Dil seçenekleri (Türkçe, İngilizce).
+  - `ElevatedButton`: Profil ekranına yönlendirme.
+- **Kullanım**:
+  - `home_screen.dart`’tan bir ayarlar butonu veya sekmesi ile `/settings` rotasına yönlendirilecek.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/features/settings` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`: Temel Flutter widget’ları için.
+   - `easy_localization`: Dil değiştirme için.
+   - `flutter_riverpod`: Durum yönetimi için.
+3. **Rota Tanımlaması**:
+   - `routes.dart`’a `/settings` rotası eklenmeli:
+     ```dart
+     case '/settings':
+       return MaterialPageRoute(builder: (_) => const SettingsScreen());
+     ```
+4. **Çeviri Güncellemesi**:
+   - `app_tr.arb` ve `app_en.arb` dosyalarına yeni çeviriler eklenmeli:
+     ```arb
+     "settings": "Ayarlar",
+     "settingsTitle": "Uygulama Ayarları",
+     "language": "Dil",
+     "zikirReminder": "Zikir Hatırlatma",
+     "dailyZikirReminder": "Günlük zikirlerinizi çekmeyi unutmayın!",
+     "zikirReminderTime": "Hatırlatma Saati",
+     "viewProfile": "Profili Görüntüle",
+     ```
+
+## Önemli Notlar
+- **Bildirim Entegrasyonu**: `NotificationService` ile hatırlatma planlama entegre edildi.
+- **Dil Desteği**: `EasyLocalization` ile dinamik dil değiştirme.
+- **Flutter Uyumluluğu**: Kod, Flutter 3.x ile uyumludur.
+- **Gelecek Genişletmeler**: Tema seçimi ve hesap silme eklenebilir.
+
+## Sonraki Adımlar
+- `home_screen.dart`’a ayarlar butonu eklenecek.
+- `category_screen.dart` oluşturulacak.

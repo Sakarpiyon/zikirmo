@@ -1,0 +1,27 @@
+# user_model.dart Açıklama Dosyası
+
+## Dosya Amacı
+`user_model.dart`, Zikir Matik uygulamasında kullanıcı veri modelini tanımlar, puanlama sistemi için yeni alanlar eklendi.
+
+## Dosya Konumu
+- **Yer**: `lib/core/models/user_model.dart`
+- **Klasör Amacı**: `core/models` klasörü, veri modellerini barındırır.
+
+## İçerik ve Kullanım
+- **UserModel Sınıfı**:
+  - Yeni alanlar: `points`, `level`, `currentStreak`, `badges`.
+  - `fromJson`, `toJson`: Firestore ile veri dönüşümü.
+- **Kullanım**:
+  - Kullanıcı verisi Firestore’dan çekilir ve güncellenir.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/core/models` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - Mevcut bağımlılıklar yeterli.
+
+## Önemli Notlar
+- **Güncelleme**: Puanlama sistemi için yeni alanlar eklendi.
+- **Flutter Uyumluluğu**: Flutter 3.x ile uyumludur.
+
+# Dosya Sonu: lib/core/models/user_model_açıklama.txt

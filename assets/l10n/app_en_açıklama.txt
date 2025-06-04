@@ -1,0 +1,60 @@
+# app_en.arb Açıklama Dosyası
+
+## Dosya Amacı
+`app_en.arb`, Zikir Matik uygulamasının İngilizce dil desteği için çeviri metinlerini içerir. EasyLocalization paketiyle kullanılan bu dosya, uygulamanın arayüzünde gösterilen metinleri (başlıklar, butonlar, mesajlar vb.) İngilizce olarak tanımlar.
+
+## Dosya Konumu
+- **Yer**: `assets/l10n/app_en.arb`
+- **Klasör Amacı**: `assets/l10n` klasörü, çoklu dil desteği için `.arb` formatındaki çeviri dosyalarını barındırır.
+
+## İçerik ve Kullanım
+- **Yapı**:
+  - `@@locale`: Dil kodunu belirtir (`en` için İngilizce).
+  - Her çeviri anahtarı (örneğin, `appTitle`, `welcomeMessage`) bir metni temsil eder.
+  - Her anahtarın `@` ile başlayan meta verisi, açıklamasını, türünü ve varsa yer tutucuları tanımlar.
+- **Örnek Çeviriler**:
+  - `appTitle`: Uygulamanın adı ("Zikir Matik").
+  - `welcomeMessage`: Splash veya onboarding ekranında hoş geldin mesajı.
+  - `buttonSignIn`, `buttonSignUp`: Giriş ve kayıt butonlarının metinleri.
+- **Kullanım**:
+  - `easy_localization` paketiyle metinler şu şekilde çağrılır:
+    ```dart
+    Text('appTitle'.tr()) // "Zikir Matik"
+    Text('welcomeMessage'.tr()) // "Welcome! Start your spiritual..."
+    ```
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `assets/l10n` klasörüne yerleştirin.
+2. **pubspec.yaml Güncellemesi**:
+   - `assets` bölümüne l10n klasörünü ekleyin:
+     ```yaml
+     flutter:
+       assets:
+         - assets/l10n/
+     ```
+3. **Bağımlılıklar**:
+   - `easy_localization` paketinin `pubspec.yaml`’da tanımlı olduğundan emin olun:
+     ```yaml
+     dependencies:
+       easy_localization: ^3.0.7
+     ```
+4. **EasyLocalization Yapılandırması**:
+   - `main.dart`’ta `EasyLocalization` widget’ı zaten yapılandırıldı:
+     ```dart
+     path: 'assets/l10n',
+     supportedLocales: [Locale('tr'), Locale('en'), Locale('ar')],
+     ```
+5. **Metin Ekleme**:
+   - Yeni çeviriler için bu dosyaya anahtar-meta veri çiftleri ekleyin.
+
+## Önemli Notlar
+- **Anahtar Formatı**: Anahtarlar `app_tr.arb` ile uyumlu olmalı, aynı anahtarlar kullanılmalı.
+- **Karakter Sınırı**: Metinler, UI’da taşma olmaması için kısa ve öz tutulmalı.
+- **Flutter Uyumluluğu**: Dosya, `easy_localization` 3.0.7 ve Flutter 3.x ile uyumludur.
+- **Gelecek Genişletmeler**: Arapça (`app_ar.arb`) ve diğer diller için benzer dosyalar eklenecek.
+
+## Sonraki Adımlar
+- Arapça çeviriler için `app_ar.arb` dosyası oluşturulabilir.
+- Çeviri anahtarları, Figma tasarımlarındaki metinlere göre genişletilecek.
+- Dinamik metinler için yer tutucular (örneğin, kullanıcı adı) eklenebilir.

@@ -1,0 +1,211 @@
+﻿// lib/features/categories/category_detail_screen.dart
+
+import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/providers/providers.dart';
+import 'package:zikirmo_new/core/models/category_model.dart';
+import 'package:zikirmo_new/core/models/zikir_model.dart';
+import 'package:zikirmo_new/core/services/firestore_service.dart';
+import 'package:zikirmo_new/routes.dart';
+
+// Kategori detayı provider'ı
+final categoryProvider = FutureProvider.family<CategoryModel?, String>((ref, categoryId) async {
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  return await firestoreService.getCategory(categoryId);
+});
+
+// Kategoriye ait zikirler provider'ı
+final categoryZikirsProvider = FutureProvider.family<List<ZikirModel>, String>((ref, categoryId) async {
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  return await firestoreService.getZikirsByCategory(categoryId);
+});
+
+class CategoryDetailScreen extends ConsumerWidget {
+  final String categoryId;
+  
+  const CategoryDetailScreen({
+    Key? key,
+    required this.categoryId,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final categoryAsync = ref.watch(categoryProvider(categoryId));
+    final zikirsAsync = ref.watch(categoryZikirsProvider(categoryId));
+    
+    return Scaffold(
+      appBar: AppBar(
+        title: categoryAsync.when(
+          data: (category) => Text(
+            category?.getLocalizedName(context.locale.languageCode) ?? 'category'.tr(),
+          ),
+          loading: () => Text('loading'.tr()),
+          error: (_, __) => Text('category'.tr()),
+        ),
+      ),
+      body: zikirsAsync.when(
+        data: (zikirs) {
+          if (zikirs.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.sentiment_dissatisfied,
+                    size: 64,
+                    color: Colors.grey[400],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Bu kategoride henüz zikir yok'.tr(),
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ],
+              ),
+            );
+          }
+          
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: zikirs.length,
+            itemBuilder: (context, index) {
+              final zikir = zikirs[index];
+              return _buildZikirCard(context, zikir);
+            },
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(
+          child: Text('errorLoadingZikirs'.tr()),
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildZikirCard(BuildContext context, ZikirModel zikir) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.only(bottom: 12),
+      child: InkWell(
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            AppRoutes.zikirDetail,
+            arguments: zikir.id,
+          );
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Başlık satırı
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      zikir.getLocalizedTitle(context.locale.languageCode),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  
+                  // Hedef sayısı
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(
+                      zikir.targetCount.toString(),
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              
+              // Açıklama (varsa)
+              if (zikir.description.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Text(
+                  zikir.getLocalizedDescription(context.locale.languageCode),
+                  style: TextStyle(color: Colors.grey[600]),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+              
+              // Arapça yazılış (varsa)
+              if (zikir.arabicText != null && zikir.arabicText!.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    zikir.arabicText!,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Amiri', // Arapça yazı tipi
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+              
+              // Alt butonlar
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  // Dinleme butonu (ses varsa)
+                  if (zikir.audioUrlArabic != null || zikir.audioUrlTranslated != null)
+                    TextButton.icon(
+                      onPressed: () {
+                        // TODO: Ses oynatma işlevi
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Ses özelliği yakında eklenecek')),
+                        );
+                      },
+                      icon: const Icon(Icons.volume_up),
+                      label: Text('Dinle'.tr()),
+                    ),
+                  
+                  // Zikir çekme butonu
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.zikirCounter,
+                        arguments: zikir.id,
+                      );
+                    },
+                    icon: const Icon(Icons.touch_app),
+                    label: Text('Başla'.tr()),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

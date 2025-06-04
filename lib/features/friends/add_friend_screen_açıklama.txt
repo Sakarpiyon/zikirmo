@@ -1,0 +1,52 @@
+# add_friend_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`add_friend_screen.dart`, Zikir Matik uygulamasında kullanıcıların takma ad veya e-posta ile arkadaş arayıp ekleyebileceği ekranı tanımlar. Firestore ile entegre çalışarak kullanıcı aramayı destekler.
+
+## Dosya Konumu
+- **Yer**: `lib/features/friends/add_friend_screen.dart`
+- **Klasör Amacı**: `features/friends` klasörü, sosyal özelliklerle ilgili ekranları barındırır.
+
+## İçerik ve Kullanım
+- **AddFriendScreen Widget**:
+  - `StatefulWidget` olarak tanımlanır, çünkü arama sonuçları ve metin girişi durumu yönetilir.
+  - `_searchUsers`: Firestore’dan kullanıcıları takma ada göre arar.
+  - `build`: Arama alanı ve sonuç listesini içerir.
+- **UI Elemanları**:
+  - `AppBar`: Ekran başlığı (`addFriend`).
+  - `TextField`: Kullanıcı arama için giriş alanı.
+  - `ListView.builder`: Arama sonuçlarını listeler.
+  - `IconButton`: Her kullanıcı için arkadaş ekleme butonu.
+- **Kullanım**:
+  - `friends_screen.dart`’tan `FloatingActionButton` ile yönlendirilecek.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/features/friends` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`: Temel Flutter widget’ları için.
+   - `easy_localization`: Çoklu dil desteği için.
+   - `cloud_firestore`: Firestore işlemleri için.
+3. **Rota Tanımlaması**:
+   - `routes.dart`’ta `/add_friend` rotası tanımlanmalı:
+     ```dart
+     case '/add_friend':
+       return MaterialPageRoute(builder: (_) => const AddFriendScreen());
+     ```
+4. **Çeviri Güncellemesi**:
+   - `app_tr.arb` ve `app_en.arb` dosyalarına yeni çeviriler eklenmeli:
+     ```arb
+     "addFriend": "Arkadaş Ekle",
+     "friendAdded": "Arkadaş eklendi!",
+     ```
+
+## Önemli Notlar
+- **Firestore Sorgusu**: Takma ad araması için `isGreaterThanOrEqualTo` ve `isLessThanOrEqualTo` kullanıldı, bu Unicode sıralamasına dayanır.
+- **Kullanıcı ID’si**: Şu an bir TODO var, mevcut kullanıcının ID’si `AuthService`’ten alınmalı.
+- **Flutter Uyumluluğu**: Kod, Flutter 3.x, `easy_localization` 3.0.7 ve `cloud_firestore` 5.4.0 ile uyumludur.
+- **Gelecek Genişletmeler**: E-posta araması, önerilen arkadaşlar ve davet sistemi eklenebilir.
+
+## Sonraki Adımlar
+- `friends_screen.dart`’a `AddFriendScreen` yönlendirmesi eklenecek.
+- `auth_service.dart`’tan mevcut kullanıcı ID’si alınacak.
+- Arama sonuçları için sayfalama eklenebilir.

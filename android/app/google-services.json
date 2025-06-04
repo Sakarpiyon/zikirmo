@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "510473874379",
+    "project_id": "zikirmatik-be5c0",
+    "storage_bucket": "zikirmatik-be5c0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510473874379:android:b73bda7d7e84d6943c644e",
+        "android_client_info": {
+          "package_name": "com.zikirmo.zikirmo_new"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510473874379-v0qned03sjelsav2qkst7vlfhuqt23os.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zikirmo.zikirmo_new",
+            "certificate_hash": "37f5b2ee5e78db081b4c62cc56d909cfd7794054"
+          }
+        },
+        {
+          "client_id": "510473874379-o3b856400tct05a9lr7t6cb300090s1q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFy9XnebVQFc8Itt_jnCwaZYm67k8zpR8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "510473874379-o3b856400tct05a9lr7t6cb300090s1q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "510473874379-ld0ongres6sh7k5d8pkseej4sge5qvld.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.zikirmo.zikirmoNew"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

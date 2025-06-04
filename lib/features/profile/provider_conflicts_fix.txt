@@ -1,0 +1,78 @@
+
+// Dosya: lib/core/services/firestore_service.dart
+// Klasör: lib/core/services
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/user_model.dart';
+import '../models/zikir_model.dart';
+import '../models/category_model.dart';
+import '../models/user_zikir_model.dart';
+import '../models/friend_model.dart';
+
+// NOT: firestoreServiceProvider provider'ı core/providers/providers.dart içinde tanımlı.
+// Buradaki duplicate provider tanımı kaldırıldı.
+
+class FirestoreService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  FirebaseFirestore get firestore => _firestore;
+
+  // ==================== KULLANICI İŞLEMLERİ ====================
+
+  Future<UserModel?> getUser(String userId) async {
+    try {
+      final doc = await _firestore.collection('users').doc(userId).get();
+      return doc.exists ? UserModel.fromJson(doc.data() ?? {}, userId) : null;
+    } catch (e) {
+      print('getUser error: $e');
+      return null;
+    }
+  }
+
+  Future<bool> createOrUpdateUser(String userId, Map<String, dynamic> data) async {
+    try {
+      await _firestore.collection('users').doc(userId).set(data, SetOptions(merge: true));
+      return true;
+    } catch (e) {
+      print('createOrUpdateUser error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> updateUser(String userId, Map<String, dynamic> data) async {
+    try {
+      await _firestore.collection('users').doc(userId).update(data);
+      return true;
+    } catch (e) {
+      print('updateUser error: $e');
+      return false;
+    }
+  }
+
+  // ... (diğer methodlar olduğu gibi kalacak, burada import ve provider tanımı düzeltildi)
+}
+
+
+// Dosya: lib/core/services/analytics_service.dart
+// Klasör: lib/core/services
+
+import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+
+// NOT: analyticsServiceProvider provider'ı core/providers/providers.dart içinde tanımlı.
+// Buradaki duplicate provider tanımı kaldırıldı.
+
+class AnalyticsService {
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+
+  Future<void> logEvent(String name, Map<String, dynamic>? parameters) async {
+    await _analytics.logEvent(name: name, parameters: parameters);
+  }
+
+  Future<void> logSignIn(String method) async {
+    await _analytics.logLogin(loginMethod: method);
+  }
+
+  // ... (diğer log metotları burada yer alacak)
+}

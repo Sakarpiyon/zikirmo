@@ -1,0 +1,44 @@
+# main.dart Açıklama Dosyası
+
+## Dosya Amacı
+`main.dart`, Zikir Matik uygulamasının ana giriş noktasıdır. Firebase, çoklu dil desteği, Riverpod ve bildirim servislerini başlatır, ardından uygulamayı çalıştırır.
+
+## Dosya Konumu
+- **Yer**: `lib/main.dart`
+- **Klasör Amacı**: `lib` kök dizini, uygulamanın ana giriş dosyasını barındırır.
+
+## İçerik ve Kullanım
+- **main Fonksiyonu**:
+  - `WidgetsFlutterBinding.ensureInitialized`: Flutter bağlamını başlatır.
+  - `Firebase.initializeApp`: Firebase’ı başlatır, `firebase_options.dart`’tan ayarları alır.
+  - `EasyLocalization.ensureInitialized`: Çoklu dil desteğini başlatır.
+  - `NotificationService().initialize`: Bildirim servisini başlatır.
+  - `runApp`: Uygulamayı `ProviderScope` ve `EasyLocalization` ile sararak başlatır.
+- **Kullanım**:
+  - Uygulamanın başlangıç noktasıdır, tüm başlatma işlemleri burada yapılır.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`: Temel Flutter widget’ları için.
+   - `firebase_core`: Firebase başlatma için.
+   - `easy_localization`: Çoklu dil desteği için.
+   - `flutter_riverpod`: Durum yönetimi için.
+   - `firebase_messaging`: Bildirimler için.
+3. **Firebase Yapılandırması**:
+   - `firebase_options.dart`’ta tanımlı ayarlar kullanılmalı.
+   - Firebase Console’dan alınan `google-services.json` ve `GoogleService-Info.plist` dosyaları eklenmeli.
+4. **Dil Dosyaları**:
+   - `assets/l10n/` klasöründe `app_tr.arb` ve `app_en.arb` bulunmalı.
+
+## Önemli Notlar
+- **Başlatma Sırası**: Firebase ve bildirim servisleri, `runApp`’ten önce başlatılmalı.
+- **Dil Desteği**: `EasyLocalization`, `tr` ve `en` dillerini destekler, varsayılan dil `tr`.
+- **Flutter Uyumluluğu**: Kod, Flutter 3.x ve bağımlılıklarla uyumludur.
+- **Gelecek Genişletmeler**: Diğer servisler (örneğin, analitik) burada başlatılabilir.
+
+## Sonraki Adımlar
+- Zikir hatırlatma ayarları için bir ekran oluşturulacak.
+- Birim ve widget testleri yazılacak.
+- Deeplink desteği için yapılandırma eklenecek.

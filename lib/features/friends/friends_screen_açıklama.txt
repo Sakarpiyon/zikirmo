@@ -1,0 +1,47 @@
+# friends_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`friends_screen.dart`, Zikir Matik uygulamasında kullanıcıların Firestore’dan dinamik olarak çekilen arkadaş listesini görüntüleyebileceği, arayabileceği ve zikir paylaşabileceği ekranı tanımlar.
+
+## Dosya Konumu
+- **Yer**: `lib/features/friends/friends_screen.dart`
+- **Klasör Amacı**: `features/friends` klasörü, sosyal özelliklerle ilgili ekranları barındırır.
+
+## İçerik ve Kullanım
+- **FriendsScreen Widget**:
+  - `ConsumerStatefulWidget` olarak tanımlanır, arama ve paylaşım durumu yönetimi için.
+  - `friendsProvider`: Firestore’dan arkadaşları çeker.
+  - `_filterFriends`: Arkadaş listesini aramaya göre filtreler.
+  - `_shareZikir`: Seçilen arkadaşla zikir paylaşır.
+  - `build`: Arama alanı, arkadaş listesi ve paylaşım UI’sını oluşturur.
+- **UI Elemanları**:
+  - `AppBar`: Ekran başlığı (`friends`).
+  - `TextField`: Arkadaş arama alanı.
+  - `ListView.builder`: Filtrelenmiş arkadaşları listeler, paylaşım butonu içerir.
+  - `FloatingActionButton`: Arkadaş ekleme ekranına yönlendirme.
+- **Kullanım**:
+  - `home_screen.dart`’tan `BottomNavigationBar` ile `/friends` rotasına yönlendirilir.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/features/friends` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`: Temel Flutter widget’ları için.
+   - `easy_localization`: Çoklu dil desteği için.
+   - `flutter_riverpod`: Durum yönetimi için.
+   - `cloud_firestore`: Firestore verileri için.
+3. **Rota Tanımlaması**:
+   - `routes.dart`’ta `/friends` rotası zaten tanımlı.
+4. **Çeviri Güncellemesi**:
+   - `app_tr.arb` ve `app_en.arb` dosyalarına yeni çeviri eklenmeli:
+     ```arb
+     "zikirShared": "Zikir paylaşıldı!",
+     ```
+
+## Önemli Notlar
+- **Güncelleme**: Zikir paylaşımı işlevselliği eklendi.
+- **Flutter Uyumluluğu**: Kod, Flutter 3.x ile uyumludur.
+- **Gelecek Genişletmeler**: Mesajlaşma eklenebilir.
+
+## Sonraki Adımlar
+- Çeviri dosyaları güncellenecek.

@@ -1,0 +1,59 @@
+# onboarding_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`onboarding_screen.dart`, Zikir Matik uygulamasının yeni kullanıcılar için uygulamayı tanıtan onboarding ekranını tanımlar. Kullanıcılara uygulamanın temel özelliklerini (zikir çekme, sosyal özellikler, puanlama vb.) tanıtan bir slayt gösterisi sunar.
+
+## Dosya Konumu
+- **Yer**: `lib/features/onboarding/onboarding_screen.dart`
+- **Klasör Amacı**: `features/onboarding` klasörü, onboarding ekranına özgü dosyaları barındırır.
+
+## İçerik ve Kullanım
+- **OnboardingScreen Widget**:
+  - `StatefulWidget` olarak tanımlanır, çünkü sayfa geçişleri ve durum yönetimi gerekir.
+  - `_pageController`: `PageView` için sayfa kontrolü sağlar.
+  - `_onboardingData`: Slayt verilerini (başlık, açıklama, ikon) içerir.
+- **UI Elemanları**:
+  - `PageView`: Slayt gösterisi için kaydırılabilir sayfalar.
+  - `Icon`: Her slaytta temsilî bir ikon (örneğin, `Icons.mosque`).
+  - `Text`: Başlık ve açıklama, `easy_localization` ile çoklu dil desteği sağlar.
+  - `AnimatedContainer`: Sayfa göstergesi (dot indicator) için animasyonlu noktalar.
+  - `ElevatedButton`: “İleri” veya “Başla” butonu, son slaytta `/login` rotasına yönlendirir.
+- **Kullanım**:
+  - `splash_screen.dart`’tan `/onboarding` rotasına yönlendirilir.
+  - Son slaytta `Navigator.pushReplacementNamed` ile `/login` ekranına geçiş yapılır.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/features/onboarding` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`: Temel Flutter widget’ları için.
+   - `easy_localizaton`: Çoklu dil desteği için.
+3. **Rota Tanımlaması**:
+   - `routes.dart`’ta `/onboarding` rotası zaten tanımlı:
+     ```dart
+     case '/onboarding':
+       return MaterialPageRoute(builder: (_) => const OnboardingScreen());
+     ```
+4. **Çeviri Güncellemesi**:
+   - `app_tr.arb` ve `app_en.arb` dosyalarına yeni çeviriler eklenmeli:
+     ```arb
+     "onboardingTitle1": "Zikir Çekin",
+     "onboardingDesc1": "Günlük zikirlerinizi kolayca takip edin.",
+     "onboardingTitle2": "Arkadaşlarınızla Bağlantı Kurun",
+     "onboardingDesc2": "Sosyal özelliklerle zikir deneyiminizi paylaşın.",
+     "onboardingTitle3": "Puan Kazanın",
+     "onboardingDesc3": "Zikirlerinizle lider tablosunda yükselin.",
+     "buttonNext": "İleri",
+     "buttonStart": "Başla",
+     ```
+
+## Önemli Notlar
+- **Slayt Sayısı**: Şu an 3 slayt tanımlı, ancak `_onboardingData`’ya yeni slaytlar eklenebilir.
+- **Animasyon**: Sayfa geçişleri için `Curves.easeInOut` kullanıldı, daha karmaşık animasyonlar eklenebilir.
+- **Flutter Uyumluluğu**: Kod, Flutter 3.x ve `easy_localization` 3.0.7 ile uyumludur.
+- **Gelecek Genişletmeler**: Lottie animasyonları veya görsellerle slaytlar zenginleştirilebilir.
+
+## Sonraki Adımlar
+- `login_screen.dart` dosyası oluşturularak kimlik doğrulama ekranı tanımlanacak.
+- Onboarding verileri, Firebase Remote Config ile dinamik hale getirilebilir.
+- Slaytlar için görsel veya animasyon entegrasyonu eklenebilir.

@@ -1,0 +1,51 @@
+# theme_config.dart Açıklama Dosyası
+
+## Dosya Amacı
+`theme_config.dart`, Zikir Matik uygulamasının aydınlık ve karanlık tema ayarlarını tanımlar. Material 3 tasarım prensiplerine uygun olarak, uygulamanın renk şeması, tipografi, düğme stilleri ve diğer UI bileşenleri için tutarlı bir görünüm sağlar.
+
+## Dosya Konumu
+- **Yer**: `lib/core/config/theme_config.dart`
+- **Klasör Amacı**: `core/config` klasörü, uygulamanın temel yapılandırma dosyalarını (tema, Firebase vb.) barındırır.
+
+## İçerik ve Kullanım
+- **ThemeConfig Sınıfı**:
+  - `lightTheme`: Aydınlık tema ayarlarını içerir.
+  - `darkTheme`: Karanlık tema ayarlarını içerir.
+- **Tema Özellikleri**:
+  - `useMaterial3: true`: Flutter'ın Material 3 tasarım sistemini kullanır.
+  - `colorScheme`: `Colors.teal` temel alınarak dinamik bir renk şeması oluşturur.
+  - `scaffoldBackgroundColor`: Ana ekran arka plan rengi (beyaz veya koyu gri).
+  - `appBarTheme`: Uygulama çubuğu için renk, yazı rengi ve gölge ayarları.
+  - `textTheme`: Başlık ve gövde metinleri için font boyutları ve renkler.
+  - `elevatedButtonTheme`: Yükseltilmiş düğmeler için stil (renk, kenar yuvarlama).
+- **Renk Paleti**:
+  - Temel renk olarak `teal` kullanıldı, ancak bu renk projeye göre özelleştirilebilir.
+  - Aydınlık ve karanlık modlar için kontrastlı renkler seçildi.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/core/config` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - Bu dosya ek bir paket gerektirmez, sadece Flutter'ın `material` kütüphanesini kullanır.
+3. **Tema Kullanımı**:
+   - `app.dart` dosyasında `MaterialApp` widget'ında tema ayarları için kullanılır:
+     ```dart
+     theme: ThemeConfig.lightTheme,
+     darkTheme: ThemeConfig.darkTheme,
+     themeMode: ThemeMode.system,
+     ```
+   - `ThemeMode.system`, cihazın tema ayarına göre otomatik geçiş sağlar.
+4. **Özelleştirme**:
+   - `seedColor` değerini değiştirerek farklı bir temel renk kullanılabilir.
+   - `textTheme` veya diğer stilleri projenin UI/UX tasarımına göre güncelleyin.
+
+## Önemli Notlar
+- **Erişilebilirlik**: Metin renkleri (`Colors.black87`, `Colors.white70` vb.) yüksek kontrast sağlayarak okunabilirliği artırır.
+- **Modülerlik**: Tema ayarları tek bir yerde toplandığından, ileride yeni temalar eklemek kolaydır.
+- **Flutter Uyumluluğu**: Kod, Flutter 3.x ile uyumludur. Material 3 desteği için `useMaterial3: true` kullanıldı.
+- **Performans**: Tema tanımları statik olduğundan, uygulama performansına olumsuz etkisi yoktur.
+
+## Sonraki Adımlar
+- Tema ayarlarını dinamik hale getirmek için `theme_provider.dart` dosyası oluşturularak Riverpod ile tema yönetimi sağlanabilir.
+- UI bileşenleri (örneğin, `custom_button.dart`) bu tema ayarlarını referans alacak.
+- Figma tasarımlarına göre renk paleti ve tipografi özelleştirilebilir.

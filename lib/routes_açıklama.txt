@@ -1,0 +1,27 @@
+# routes.dart Açıklama Dosyası
+
+## Dosya Amacı
+`routes.dart`, Zikir Matik uygulamasında navigasyon rotalarını tanımlar.
+
+## Dosya Konumu
+- **Yer**: `lib/routes.dart`
+- **Klasör Amacı**: `lib` kök dizini, uygulama çapında yapılandırmaları barındırır.
+
+## İçerik ve Kullanım
+- **AppRoutes Sınıfı**:
+  - Yeni rotalar: `/reward_store`, `/admin_settings`.
+  - `getRoutes`: Rota haritasını döndürür.
+- **Kullanım**:
+  - `main.dart`’ta `MaterialApp` ile kullanılır.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - İlgili ekranların import’ları doğru olmalı.
+
+## Önemli Notlar
+- **Güncelleme**: Yeni rotalar eklendi.
+- **Flutter Uyumluluğu**: Flutter 3.x ile uyumludur.
+
+# Dosya Sonu: lib/routes_açıklama.txt

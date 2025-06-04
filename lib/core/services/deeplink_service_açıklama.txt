@@ -1,0 +1,70 @@
+# deeplink_service.dart Açıklama Dosyası
+
+## Dosya Amacı
+`deeplink_service.dart`, Zikir Matik uygulamasında Firebase Dynamic Links ile deeplink işlemlerini (örneğin, arkadaş davet bağlantıları) yönetir.
+
+## Dosya Konumu
+- **Yer**: `lib/core/services/deeplink_service.dart`
+- **Klasör Amacı**: `core/services` klasörü, uygulamanın temel servislerini barındırır.
+
+## İçerik ve Kullanım
+- **DeeplinkService Sınıfı**:
+  - `_dynamicLinks`: Firebase Dynamic Links örneği.
+  - `initialize`: Uygulama açıldığında veya kapalıyken deeplink’leri işler.
+  - `createInviteLink`: Kullanıcıya özel davet bağlantısı oluşturur.
+  - `_handleDeepLink`: Gelen deeplink’leri işler ve ilgili ekrana yönlendirir.
+- **Kullanım**:
+  - `main.dart`’ta başlatılır:
+    ```dart
+    final deeplinkService = DeeplinkService();
+    await deeplinkService.initialize(context);
+    ```
+  - Davet bağlantısı oluşturma:
+    ```dart
+    final link = await deeplinkService.createInviteLink(userId);
+    ```
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/core/services` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `firebase_dynamic_links`: Deeplink desteği için.
+   - `pubspec.yaml`’a ekleyin:
+     ```yaml
+     dependencies:
+       firebase_dynamic_links: ^5.5.0
+     ```
+3. **Firebase Yapılandırması**:
+   - Firebase Console’da Dynamic Links etkinleştirilmeli.
+   - `google-services.json` ve `GoogleService-Info.plist` dosyaları güncel olmalı.
+4. **Platform Yapılandırması**:
+   - **Android**: `android/app/src/main/AndroidManifest.xml`’e deeplink intent filtresi eklenmeli:
+     ```xml
+     <intent-filter>
+       <action android:name="android.intent.action.VIEW"/>
+       <category android:name="android.intent.category.DEFAULT"/>
+       <category android:name="android.intent.category.BROWSABLE"/>
+       <data android:scheme="https" android:host="zikirmatik.page.link"/>
+     </intent-filter>
+     ```
+   - **iOS**: `ios/Runner/Info.plist`’e deeplink yapılandırması eklenmeli:
+     ```xml
+     <key>CFBundleURLTypes</key>
+     <array>
+       <dict>
+         <key>CFBundleURLSchemes</key>
+         <array>
+           <string>zikirmatik</string>
+         </array>
+       </dict>
+     </array>
+     ```
+
+## Önemli Notlar
+- **Hata Yönetimi**: Deeplink hataları konsola yazdırılır, UI’da da işlenebilir.
+- **Flutter Uyumluluğu**: Kod, Flutter 3.x ve `firebase_dynamic_links` 5.5.0 ile uyumludur.
+- **Gelecek Genişletmeler**: Diğer deeplink türleri (örneğin, zikir paylaşımı) eklenebilir.
+
+## Sonraki Adımlar
+- `main.dart`’a deeplink başlatma eklenecek.
+- `analytics_service.dart` oluşturulacak.

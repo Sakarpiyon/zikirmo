@@ -1,0 +1,44 @@
+# reward_store_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`reward_store_screen.dart`, Zikir Matik uygulamasında kullanıcıların puanlarla ödül (tema, zil sesi, avatar) satın alabileceği ekranı tanımlar.
+
+## Dosya Konumu
+- **Yer**: `lib/features/rewards/reward_store_screen.dart`
+- **Klasör Amacı**: `features/rewards` klasörü, ödül mağazası ile ilgili ekranları barındırır.
+
+## İçerik ve Kullanım
+- **RewardStoreScreen Widget**:
+  - `userProvider`: Kullanıcı verisini çeker.
+  - `rewardsProvider`: Firestore’dan ödül listesini çeker.
+  - `_purchaseReward`: Ödül satın alma işlemi.
+  - `build`: Kullanıcı puanları ve ödül kartları.
+- **UI Elemanları**:
+  - `AppBar`: Ekran başlığı (`rewardStoreTitle`).
+  - `ListView`: Ödül kartları (isim, maliyet, satın al butonu).
+- **Kullanım**:
+  - `home_screen.dart` veya `profile_screen.dart`’tan yönlendirme.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - `lib/features/rewards` klasörü oluşturun ve dosyayı yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`, `easy_localization`, `flutter_riverpod`.
+3. **Rota Tanımlaması**:
+   - `routes.dart`’ta `/reward_store` rotası tanımlanmalı.
+4. **Firestore Yapısı**:
+   - `rewards` koleksiyonu oluşturulmalı:
+     ```json
+     {
+       "id": "theme_pack_1",
+       "name": "Koyu Tema",
+       "type": "themes",
+       "cost": 500
+     }
+     ```
+
+## Önemli Notlar
+- **Flutter Uyumluluğu**: Flutter 3.x ile uyumludur.
+- **Gelecek Genişletmeler**: `in_app_purchase` ile fiziksel ödüller eklenebilir.
+
+# Dosya Sonu: lib/features/rewards/reward_store_screen_açıklama.txt

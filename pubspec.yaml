@@ -1,0 +1,47 @@
+name: zikirmo_new
+description: A Flutter application for zikir tracking and social features.
+version: 1.0.0+2
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  easy_localization: ^3.0.7
+  flutter_riverpod: ^2.6.1
+  
+  # Firebase - Uyumlu versiyonlar
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.14.0
+  cloud_firestore: ^4.13.6
+  firebase_messaging: ^14.7.10
+  firebase_analytics: ^10.7.4
+  
+  intl: ^0.20.2
+  google_sign_in: ^6.2.1  # Güncellenmiş versiyon
+  sign_in_with_apple: ^6.1.4
+  shared_preferences: ^2.2.2
+  in_app_purchase: ^3.1.10
+  audioplayers: ^6.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/lang/
+    - assets/animations/
+    - assets/sounds/
+    - assets/images/gifts/
+    - assets/tespih/
+
+flutter_intl:
+  enabled: true
+  arb_dir: assets/lang
+  output_dir: lib/generated
+  output_localization_file_name: l10n.dart

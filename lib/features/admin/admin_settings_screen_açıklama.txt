@@ -1,0 +1,39 @@
+# admin_settings_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`admin_settings_screen.dart`, Zikir Matik uygulamasında admin’in puanlama sistemi değerlerini düzenleyebileceği ekranı tanımlar.
+
+## Dosya Konumu
+- **Yer**: `lib/features/admin/admin_settings_screen.dart`
+- **Klasör Amacı**: `features/admin` klasörü, admin ile ilgili ekranları barındırır.
+
+## İçerik ve Kullanım
+- **AdminSettingsScreen Widget**:
+  - `settingsProvider`: Firestore’dan ayarları çeker.
+  - `_saveSettings`: Yeni ayarları kaydeder.
+  - `build`: Puan değerleri için form.
+- **UI Elemanları**:
+  - `AppBar`: Ekran başlığı (`adminSettingsTitle`).
+  - `Form`: Puan değerleri için giriş alanları.
+  - `ElevatedButton`: Kaydet butonu.
+- **Kullanım**:
+  - Admin kullanıcılar için erişilebilir.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - `lib/features/admin` klasörü oluşturun ve dosyayı yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`, `easy_localization`, `flutter_riverpod`.
+3. **Rota Tanımlaması**:
+   - `routes.dart`’ta `/admin_settings` rotası tanımlanmalı.
+4. **Firebase Yapılandırması**:
+   - Admin rolü için `customClaims` ayarlanmalı:
+     ```bash
+     firebase functions:setAdminClaim
+     ```
+
+## Önemli Notlar
+- **Flutter Uyumluluğu**: Flutter 3.x ile uyumludur.
+- **Güvenlik**: Firestore güvenlik kuralları admin erişimini kısıtlamalı.
+
+# Dosya Sonu: lib/features/admin/admin_settings_screen_açıklama.txt

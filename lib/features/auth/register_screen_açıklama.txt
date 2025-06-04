@@ -1,0 +1,53 @@
+# register_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`register_screen.dart`, Zikir Matik uygulamasında yeni kullanıcıların takma ad, e-posta ve şifre ile kayıt olabileceği ekranı tanımlar. Ayrıca, mevcut hesabıyla giriş yapmak isteyenler için giriş ekranına yönlendirme içerir.
+
+## Dosya Konumu
+- **Yer**: `lib/features/auth/register_screen.dart`
+- **Klasör Amacı**: `features/auth` klasörü, kimlik doğrulama ile ilgili ekranları barındırır.
+
+## İçerik ve Kullanım
+- **RegisterScreen Widget**:
+  - `StatelessWidget` olarak tanımlanır, çünkü şu an durum yönetimi gerekmez.
+  - `build`: Kayıt formunu ve butonları içerir.
+- **UI Elemanları**:
+  - `AppBar`: Ekran başlığı (`buttonSignUp`).
+  - `TextField`: Takma ad, e-posta ve şifre giriş alanları.
+  - `ElevatedButton`: Kayıt butonu, şu an sadece `/home`’a yönlendiriyor.
+  - `TextButton`: Giriş ekranına (`/login`) yönlendirme.
+  - `Text`: Kayıt mesajı, `easy_localization` ile çoklu dil desteği sağlar.
+- **Kullanım**:
+  - `login_screen.dart`’tan `/register` rotasına yönlendirilir.
+  - Başarılı kayıt sonrası `Navigator.pushReplacementNamed` ile `/home` ekranına geçiş yapılır.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/features/auth` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`: Temel Flutter widget’ları için.
+   - `easy_localizaton`: Çoklu dil desteği için.
+3. **Rota Tanımlaması**:
+   - `routes.dart`’ta `/register` rotası zaten tanımlı:
+     ```dart
+     case '/register':
+       return MaterialPageRoute(builder: (_) => const RegisterScreen());
+     ```
+4. **Çeviri Güncellemesi**:
+   - `app_tr.arb` ve `app_en.arb` dosyalarına yeni çeviriler eklenmeli:
+     ```arb
+     "registerMessage": "Hesap oluşturarak Zikir Matik’e katılın!",
+     "nickname": "Takma Ad",
+     "haveAccount": "Zaten hesabınız var mı? Giriş yapın",
+     ```
+
+## Önemli Notlar
+- **Firebase Entegrasyonu**: Şu an kayıt işlemi için bir TODO var. `auth_service.dart` oluşturulduktan sonra Firebase Authentication entegre edilecek.
+- **Form Doğrulama**: Takma ad, e-posta ve şifre için doğrulama kuralları eklenebilir.
+- **Flutter Uyumluluğu**: Kod, Flutter 3.x ve `easy_localization` 3.0.7 ile uyumludur.
+- **Gelecek Genişletmeler**: Telefon numarası veya sosyal medya ile kayıt seçenekleri eklenebilir.
+
+## Sonraki Adımlar
+- `home_screen.dart` dosyası oluşturularak ana sayfa ekranı tanımlanacak.
+- `auth_service.dart` ile Firebase Authentication entegrasyonu sağlanacak.
+- Form doğrulama ve hata yönetimi eklenecek.

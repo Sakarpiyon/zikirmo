@@ -1,0 +1,32 @@
+# auth_service.dart Açıklama Dosyası
+
+## Dosya Amacı
+`auth_service.dart`, Zikir Matik uygulamasında Firebase Authentication işlemlerini (e-posta, Google, Apple Sign-In, şifre sıfırlama) yönetir.
+
+## Dosya Konumu
+- **Yer**: `lib/core/services/auth_service.dart`
+- **Klasör Amacı**: `core/services` klasörü, uygulamanın temel servislerini barındırır.
+
+## İçerik ve Kullanım
+- **AuthService Sınıfı**:
+  - `signInWithEmailAndPassword`: E-posta/şifre ile giriş.
+  - `createUserWithEmailAndPassword`: E-posta/şifre ile kayıt.
+  - `signInWithGoogle`: Google ile giriş.
+  - `signInWithApple`: Apple ile giriş.
+  - `sendPasswordResetEmail`: Şifre sıfırlama e-postası gönderir.
+  - `signOut`: Çıkış yapar.
+- **Kullanım**:
+  - Örnek: Şifre sıfırlama:
+    ```dart
+    await authService.sendPasswordResetEmail(email);
+    ```
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/core/services` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `firebase_auth`, `google_sign_in`, `sign_in_with_apple`.
+
+## Önemli Notlar
+- **Güncelleme**: Şifre sıfırlama fonksiyonu eklendi.
+- **Flutter Uyumluluğu**: Flutter 3.x ile uyumludur.

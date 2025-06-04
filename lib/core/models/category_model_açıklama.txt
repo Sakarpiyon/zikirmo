@@ -1,0 +1,44 @@
+# category_model.dart Açıklama Dosyası
+
+## Dosya Amacı
+`category_model.dart`, Zikir Matik uygulamasında zikir kategorilerini temsil eden veri modelini tanımlar. Firestore’dan alınan kategori verilerini yapılandırılmış bir şekilde işlemek için kullanılır.
+
+## Dosya Konumu
+- **Yer**: `lib/core/models/category_model.dart`
+- **Klasör Amacı**: `core/models` klasörü, uygulamanın veri modellerini barındırır.
+
+## İçerik ve Kullanım
+- **CategoryModel Sınıfı**:
+  - `id`: Kategorinin benzersiz kimliği.
+  - `name`: Çoklu dil destekli kategori adı (örneğin, `{tr: "Günlük Zikirler", en: "Daily Zikirs"}`).
+  - `createdAt`: Kategori oluşturma tarihi.
+- **Metotlar**:
+  - `fromMap`: Firestore’dan alınan veriyi `CategoryModel`’e dönüştürür.
+  - `toMap`: `CategoryModel`’ü Firestore’a kaydedilecek formata çevirir.
+- **Kullanım**:
+  - `firestore_service.dart`’ta kategori verilerini işlemek için kullanılabilir:
+    ```dart
+    final categories = await FirestoreService().getCategories();
+    final categoryModels = categories.map((data) => CategoryModel.fromMap(data['id'], data)).toList();
+    ```
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/core/models` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - Ek bir paket gerekmez, sadece Dart’ın temel türleri kullanılır.
+3. **Firestore Entegrasyonu**:
+   - `firestore_service.dart`’a kategori verilerini çeken fonksiyonlar eklenecek.
+4. **Veri Yapısı**:
+   - `zikir-mat-Firestore Veri Mimarisi.txt`’te tanımlı `categories` koleksiyonuyla uyumlu olmalı.
+
+## Önemli Notlar
+- **Tip Güvenliği**: `Map<String, String>` ile çoklu dil desteği sağlanır.
+- **Null Güvenliği**: Varsayılan değerler (`{}`, `DateTime.now()`) ile null güvenliği sağlanır.
+- **Flutter Uyumluluğu**: Kod, Flutter 3.x ile uyumludur.
+- **Gelecek Genişletmeler**: Kategori için ikon veya ek özellikler eklenebilir.
+
+## Sonraki Adımlar
+- `firestore_service.dart`’a kategori verileri için fonksiyonlar eklenecek.
+- `home_screen.dart`’a kategori filtreleme özelliği eklenecek.
+- Kategori listesi ekranı oluşturulabilir.

@@ -1,0 +1,598 @@
+// Dosya: lib/features/home/home_screen.dart
+// Yol: C:\src\zikirmo_new\lib\features\home\home_screen.dart
+// Açıklama: Ana ekran - tüm hardcoded string'ler i18n'e çevrildi
+
+import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:zikirmo_new/routes.dart';
+import 'package:zikirmo_new/core/models/zikir_model.dart';
+import 'package:zikirmo_new/core/services/firestore_service.dart';
+import 'package:zikirmo_new/core/services/auth_service.dart';
+
+// Popüler zikirler için provider
+final popularZikirsProvider = FutureProvider<List<ZikirModel>>((ref) async {
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  return await firestoreService.getPopularZikirs(limit: 5);
+});
+
+// Kullanıcı bilgileri için provider  
+final currentUserProvider = FutureProvider((ref) async {
+  final authService = ref.watch(authServiceProvider);
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  final userId = authService.currentUser?.uid;
+  
+  if (userId != null) {
+    return await firestoreService.getUser(userId);
+  }
+  return null;
+});
+
+class HomeScreen extends ConsumerStatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  int _selectedIndex = 0;
+
+  // Bottom navigation'daki sayfa değişimi
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    
+    // Her tab için ilgili sayfaya yönlendirme
+    switch (index) {
+      case 0:
+        // Ana sayfa - zaten buradayız
+        break;
+      case 1:
+        Navigator.pushNamed(context, AppRoutes.categories);
+        break;
+      case 2:
+        Navigator.pushNamed(context, AppRoutes.leaderboard);
+        break;
+      case 3:
+        Navigator.pushNamed(context, AppRoutes.friends);
+        break;
+      case 4:
+        Navigator.pushNamed(context, AppRoutes.profile);
+        break;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final popularZikirsAsync = ref.watch(popularZikirsProvider);
+    final currentUserAsync = ref.watch(currentUserProvider);
+    
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('homeTitle'.tr()),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_outlined),
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.notifications);
+            },
+            tooltip: 'notifications'.tr(),
+          ),
+          IconButton(
+            icon: const Icon(Icons.person_outline),
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.profile);
+            },
+            tooltip: 'profile'.tr(),
+          ),
+        ],
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          ref.refresh(popularZikirsProvider);
+          ref.refresh(currentUserProvider);
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Kullanıcı karşılama kartı
+              currentUserAsync.when(
+                data: (user) => _buildWelcomeCard(context, user),
+                loading: () => _buildWelcomeCardLoading(),
+                error: (_, __) => _buildWelcomeCard(context, null),
+              ),
+              
+              const SizedBox(height: 24),
+              
+              // Hızlı aksiyonlar
+              _buildQuickActions(context),
+              
+              const SizedBox(height: 24),
+              
+              // Kategoriler başlığı
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'categories'.tr(),
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.categories);
+                    },
+                    child: Text('viewAll'.tr()),
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // Kategori kartları
+              _buildCategoriesGrid(context),
+              
+              const SizedBox(height: 24),
+              
+              // Popüler zikirler başlığı
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'popularZikirs'.tr(),
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.suggestedZikirs);
+                    },
+                    child: Text('viewAll'.tr()),
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // Popüler zikirler listesi
+              popularZikirsAsync.when(
+                data: (zikirs) => _buildPopularZikirs(context, zikirs),
+                loading: () => _buildPopularZikirsLoading(),
+                error: (_, __) => _buildPopularZikirsError(),
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        selectedItemColor: Theme.of(context).primaryColor,
+        unselectedItemColor: Colors.grey,
+        items: [
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home),
+            label: 'home'.tr(),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.category),
+            label: 'categories'.tr(),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.leaderboard),
+            label: 'leaderboard'.tr(),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.people),
+            label: 'friends'.tr(),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.person),
+            label: 'profile'.tr(),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, AppRoutes.zikirCounter);
+        },
+        backgroundColor: Theme.of(context).primaryColor,
+        child: const Icon(Icons.add, color: Colors.white),
+        tooltip: 'quickZikir'.tr(),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+
+  // Karşılama kartı
+  Widget _buildWelcomeCard(BuildContext context, dynamic user) {
+    final userName = user?.nickname ?? 'defaultUser'.tr();
+    final userPoints = user?.points ?? 0;
+    final userLevel = user?.level ?? 'levelBeginner';
+    
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).primaryColor,
+              Theme.of(context).primaryColor.withOpacity(0.8),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.white.withOpacity(0.3),
+                    child: Text(
+                      userName.isNotEmpty ? userName[0].toUpperCase() : 'U',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'welcomeUser'.tr(args: [userName]),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          'userStats'.tr(args: [userLevel.tr(), userPoints.toString()]),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white70,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.pushNamed(context, AppRoutes.zikirCounter);
+                      },
+                      icon: const Icon(Icons.play_arrow),
+                      label: Text('startZikir'.tr()),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.statistics);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white.withOpacity(0.2),
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Icon(Icons.bar_chart),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Karşılama kartı yükleniyor durumu
+  Widget _buildWelcomeCardLoading() {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Container(
+        height: 140,
+        padding: const EdgeInsets.all(20.0),
+        child: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+
+  // Hızlı aksiyonlar
+  Widget _buildQuickActions(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildQuickActionCard(
+          context,
+          Icons.auto_awesome,
+          'suggested'.tr(),
+          () => Navigator.pushNamed(context, AppRoutes.suggestedZikirs),
+        ),
+        _buildQuickActionCard(
+          context,
+          Icons.history,
+          'history'.tr(),
+          () => Navigator.pushNamed(context, AppRoutes.zikirHistory),
+        ),
+        _buildQuickActionCard(
+          context,
+          Icons.add_circle,
+          'customZikir'.tr(),
+          () => Navigator.pushNamed(context, AppRoutes.customZikir),
+        ),
+        _buildQuickActionCard(
+          context,
+          Icons.emoji_events,
+          'achievements'.tr(),
+          () => Navigator.pushNamed(context, AppRoutes.challenges),
+        ),
+      ],
+    );
+  }
+
+  // Hızlı aksiyon kartı
+  Widget _buildQuickActionCard(
+    BuildContext context,
+    IconData icon,
+    String label,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 70,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                icon,
+                color: Theme.of(context).primaryColor,
+                size: 24,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 12),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Kategoriler grid'i
+  Widget _buildCategoriesGrid(BuildContext context) {
+    final categories = [
+      {'title': 'dailyZikirs'.tr(), 'icon': Icons.calendar_today, 'route': AppRoutes.categories},
+      {'title': 'esmaUlHusna'.tr(), 'icon': Icons.star, 'route': AppRoutes.categories},
+      {'title': 'prayers'.tr(), 'icon': Icons.favorite, 'route': AppRoutes.categories},
+      {'title': 'salawat'.tr(), 'icon': Icons.people, 'route': AppRoutes.categories},
+    ];
+
+    return GridView.count(
+      crossAxisCount: 2,
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      childAspectRatio: 1.2,
+      children: categories.map((category) => 
+        _buildCategoryCard(
+          context, 
+          category['title'] as String, 
+          category['icon'] as IconData, 
+          () => Navigator.pushNamed(context, category['route'] as String),
+        )
+      ).toList(),
+    );
+  }
+
+  // Kategori kartı widget'ı
+  Widget _buildCategoryCard(BuildContext context, String title, IconData icon, VoidCallback onTap) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 32, color: Theme.of(context).primaryColor),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Popüler zikirler listesi
+  Widget _buildPopularZikirs(BuildContext context, List<ZikirModel> zikirs) {
+    if (zikirs.isEmpty) {
+      return _buildPopularZikirsEmpty();
+    }
+    
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: zikirs.length,
+      itemBuilder: (context, index) {
+        final zikir = zikirs[index];
+        return Card(
+          margin: const EdgeInsets.only(bottom: 8),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+              child: Icon(
+                Icons.auto_awesome,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+            title: Text(
+              zikir.getLocalizedTitle(context.locale.languageCode),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Text('target'.tr(args: [zikir.targetCount.toString()])),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.info_outline),
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context, 
+                      AppRoutes.zikirDetail,
+                      arguments: zikir.id,
+                    );
+                  },
+                  tooltip: 'details'.tr(),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.play_arrow),
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context, 
+                      AppRoutes.zikirCounter,
+                      arguments: zikir.id,
+                    );
+                  },
+                  tooltip: 'startZikir'.tr(),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Popüler zikirler yükleniyor durumu
+  Widget _buildPopularZikirsLoading() {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: 3,
+      itemBuilder: (context, index) {
+        return Card(
+          margin: const EdgeInsets.only(bottom: 8),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Colors.grey[300],
+            ),
+            title: Container(
+              height: 16,
+              color: Colors.grey[300],
+            ),
+            subtitle: Container(
+              height: 12,
+              width: 100,
+              color: Colors.grey[300],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Popüler zikirler hata durumu
+  Widget _buildPopularZikirsError() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
+            const SizedBox(height: 8),
+            Text(
+              'errorLoadingZikirs'.tr(),
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: () {
+                ref.refresh(popularZikirsProvider);
+              },
+              child: Text('tryAgain'.tr()),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Popüler zikirler boş durumu
+  Widget _buildPopularZikirsEmpty() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Icon(Icons.auto_awesome_outlined, size: 48, color: Colors.grey[400]),
+            const SizedBox(height: 8),
+            Text(
+              'noPopularZikirs'.tr(),
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.categories);
+              },
+              child: Text('exploreZikirs'.tr()),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

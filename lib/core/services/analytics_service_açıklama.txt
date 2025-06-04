@@ -1,0 +1,52 @@
+# analytics_service.dart Açıklama Dosyası
+
+## Dosya Amacı
+`analytics_service.dart`, Zikir Matik uygulamasında Firebase Analytics ile kullanıcı etkinliklerini (giriş, zikir tamamlama, arkadaş ekleme) izler.
+
+## Dosya Konumu
+- **Yer**: `lib/core/services/analytics_service.dart`
+- **Klasör Amacı**: `core/services` klasörü, uygulamanın temel servislerini barındırır.
+
+## İçerik ve Kullanım
+- **AnalyticsService Sınıfı**:
+  - `_analytics`: Firebase Analytics örneği.
+  - `initialize`: Analytics toplamasını etkinleştirir.
+  - `logEvent`: Genel bir olay kaydeder.
+  - `logSignIn`: Giriş olayını kaydeder.
+  - `logZikirCompleted`: Zikir tamamlama olayını kaydeder.
+  - `logFriendAdded`: Arkadaş ekleme olayını kaydeder.
+- **Kullanım**:
+  - `main.dart`’ta başlatılır:
+    ```dart
+    final analyticsService = AnalyticsService();
+    await analyticsService.initialize();
+    ```
+  - Örnek olay kaydı:
+    ```dart
+    await analyticsService.logZikirCompleted(100, 'zikir_1');
+    ```
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/core/services` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `firebase_analytics`: Analytics için.
+   - `pubspec.yaml`’a ekleyin:
+     ```yaml
+     dependencies:
+       firebase_analytics: ^10.10.0
+     ```
+3. **Firebase Yapılandırması**:
+   - Firebase Console’da Analytics etkinleştirilmeli.
+   - `google-services.json` ve `GoogleService-Info.plist` dosyaları güncel olmalı.
+4. **Platform Yapılandırması**:
+   - Firebase Analytics, Firebase Core ile otomatik çalışır, ek yapılandırma gerekmez.
+
+## Önemli Notlar
+- **Gizlilik**: Kullanıcı verileri anonimleştirilerek toplanır.
+- **Flutter Uyumluluğu**: Kod, Flutter 3.x ve `firebase_analytics` 10.10.0 ile uyumludur.
+- **Gelecek Genişletmeler**: Daha fazla olay türü (örneğin, kategori seçimi) eklenebilir.
+
+## Sonraki Adımlar
+- `main.dart`’a analytics başlatma eklenecek.
+- `firestore_service_test.dart` oluşturulacak.

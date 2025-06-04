@@ -1,0 +1,48 @@
+# splash_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`splash_screen.dart`, Zikir Matik uygulamasının açılış (splash) ekranını tanımlar. Uygulama başlatıldığında ilk gösterilen ekran olup, Firebase başlatma, kullanıcı oturum kontrolü gibi işlemler için bir geçiş noktasıdır. Ayrıca, uygulamanın logosunu ve hoş geldin mesajını gösterir.
+
+## Dosya Konumu
+- **Yer**: `lib/features/splash/splash_screen.dart`
+- **Klasör Amacı**: `features/splash` klasörü, splash ekranına özgü dosyaları barındırır.
+
+## İçerik ve Kullanım
+- **SplashScreen Widget**:
+  - Stateless veya StatefulWidget olarak tanımlanabilir. Bu durumda, yönlendirme için `StatefulWidget` kullanıldı.
+  - `initState`: 3 saniyelik bir gecikme sonrası `/onboarding` rotasına yönlendirir.
+  - `build`: Ekranın UI'sını oluşturur.
+- **UI Elemanları**:
+  - `Icon`: Uygulama için temsilî bir cami ikonu (`Icons.mosque`).
+  - `Text`: Uygulama başlığı (`appTitle`) ve hoş geldin mesajı (`welcomeMessage`), `easy_localization` ile çoklu dil desteği sağlar.
+  - `Theme.of(context)`: Tema ayarlarından (`theme_config.dart`) stil alır.
+- **Kullanım**:
+  - `app.dart`’da `initialRoute: '/splash'` ile bu ekran ilk olarak gösterilir.
+  - Yönlendirme, `Navigator.pushReplacementNamed` ile yapılır.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/features/splash` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`: Temel Flutter widget’ları için.
+   - `easy_localizaton`: Çoklu dil desteği için.
+3. **Rota Tanımlaması**:
+   - `routes.dart`’ta `/splash` rotası zaten tanımlı:
+     ```dart
+     case '/splash':
+       return MaterialPageRoute(builder: (_) => const SplashScreen());
+     ```
+4. **Tema ve Dil Entegrasyonu**:
+   - `theme_config.dart`’tan tema ayarları alınır.
+   - `app_tr.arb` ve `app_en.arb`’dan çeviriler kullanılır.
+
+## Önemli Notlar
+- **Süre**: 3 saniyelik gecikme, kullanıcıya logoyu ve mesajı göstermek için yeterlidir. Gerekirse kısaltılabilir.
+- **Firebase Başlatma**: Şu an sadece yönlendirme var. İleride `initState`’te Firebase Authentication kontrolü eklenebilir.
+- **Flutter Uyumluluğu**: Kod, Flutter 3.x ve `easy_localization` 3.0.7 ile uyumludur.
+- **Gelecek Genişletmeler**: Animasyonlu logo veya yükleme göstergesi eklenebilir.
+
+## Sonraki Adımlar
+- `onboarding_screen.dart` dosyası oluşturularak onboarding akışı tanımlanacak.
+- Firebase Authentication kontrolü eklenerek kullanıcı oturumu kontrol edilebilir.
+- Splash ekranına animasyon veya Lottie entegrasyonu eklenebilir.

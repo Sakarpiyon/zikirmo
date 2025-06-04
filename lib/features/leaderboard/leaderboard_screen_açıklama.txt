@@ -1,0 +1,32 @@
+# leaderboard_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`leaderboard_screen.dart`, Zikir Matik uygulamasında günlük, haftalık, aylık ve arkadaş grupları için lider tablolarını gösterir.
+
+## Dosya Konumu
+- **Yer**: `lib/features/leaderboard/leaderboard_screen.dart`
+- **Klasör Amacı**: `features/leaderboard` klasörü, lider tablosu ekranını barındırır.
+
+## İçerik ve Kullanım
+- **LeaderboardScreen Widget**:
+  - `leaderboardProvider`: Döneme göre lider tablosu.
+  - `friendsLeaderboardProvider`: Arkadaş lider tablosu.
+  - `build`: Dönem seçimi ve lider tabloları.
+- **UI Elemanları**:
+  - `AppBar`: Başlık.
+  - `DropdownButton`: Dönem seçimi.
+  - `ListView`: Kullanıcı sıralamaları.
+- **Kullanım**:
+  - `home_screen.dart`’tan navigasyon ile erişilir.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/features/leaderboard` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`, `easy_localization`, `flutter_riverpod`.
+
+## Önemli Notlar
+- **Güncelleme**: Dönemsel ve arkadaş lider tabloları eklendi.
+- **Flutter Uyumluluğu**: Flutter 3.x ile uyumludur.
+
+# Dosya Sonu: lib/features/leaderboard/leaderboard_screen_açıklama.txt

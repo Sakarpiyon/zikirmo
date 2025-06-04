@@ -1,0 +1,33 @@
+# challenge_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`challenge_screen.dart`, Zikir Matik uygulamasında zorlukları listeler ve başlatmayı sağlar.
+
+## Dosya Konumu
+- **Yer**: `lib/features/challenges/challenge_screen.dart`
+- **Klasör Amacı**: `features/challenges` klasörü, zorluk ekranlarını barındırır.
+
+## İçerik ve Kullanım
+- **ChallengeScreen Widget**:
+  - `challengesProvider`: Mevcut zorlukları çeker.
+  - `userChallengesProvider`: Kullanıcının zorluklarını çeker.
+  - `build`: Zorluk kartları (başlatma, ilerleme, tamamlanma durumu).
+- **UI Elemanları**:
+  - `AppBar`: Başlık.
+  - `ListView`: Zorluk kartları.
+- **Kullanım**:
+  - `home_screen.dart`’tan navigasyon (bottom navigation).
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - `lib/features/challenges` klasörü oluşturun ve dosyayı yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`, `easy_localization`, `flutter_riverpod`.
+3. **Rota Tanımlaması**:
+   - `routes.dart`’ta `/challenges` rotası tanımlanmalı.
+
+## Önemli Notlar
+- **Flutter Uyumluluğu**: Flutter 3.x ile uyumludur.
+- **Test**: Zorluk başlatma, ilerleme ve tamamlanma durumlarını kontrol edin.
+
+# Dosya Sonu: lib/features/challenges/challenge_screen_açıklama.txt

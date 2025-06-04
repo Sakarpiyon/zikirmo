@@ -1,0 +1,52 @@
+# category_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`category_screen.dart`, Zikir Matik uygulamasında zikir kategorilerini Firestore’dan dinamik olarak listeleyen ekranı tanımlar.
+
+## Dosya Konumu
+- **Yer**: `lib/features/categories/category_screen.dart`
+- **Klasör Amacı**: `features/categories` klasörü, zikir kategorileri ile ilgili ekranları barındırır.
+
+## İçerik ve Kullanım
+- **CategoryScreen Widget**:
+  - `ConsumerWidget` olarak tanımlanır, Riverpod ile durum yönetimi için.
+  - `categoriesProvider`: Firestore’dan kategorileri çeker.
+  - `build`: Kategori listesi UI’sını oluşturur.
+- **UI Elemanları**:
+  - `AppBar`: Ekran başlığı (`categories`).
+  - `ListView.builder`: Kategorileri dinamik olarak listeler.
+- **Kullanım**:
+  - `home_screen.dart`’tan bir kategori filtreleme butonu ile `/categories` rotasına yönlendirilecek.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/features/categories` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`: Temel Flutter widget’ları için.
+   - `easy_localization`: Çoklu dil desteği için.
+   - `flutter_riverpod`: Durum yönetimi için.
+   - `cloud_firestore`: Firestore verileri için.
+3. **Rota Tanımlaması**:
+   - `routes.dart`’a `/categories` rotası eklenmeli:
+     ```dart
+     case '/categories':
+       return MaterialPageRoute(builder: (_) => const CategoryScreen());
+     ```
+4. **Çeviri Güncellemesi**:
+   - `app_tr.arb` ve `app_en.arb` dosyalarına yeni çeviriler eklenmeli:
+     ```arb
+     "categories": "Kategoriler",
+     "zikirCategories": "Zikir Kategorileri",
+     "noCategories": "Kategori bulunamadı.",
+     "errorLoadingCategories": "Kategoriler yüklenirken hata oluştu.",
+     ```
+
+## Önemli Notlar
+- **Firestore Entegrasyonu**: `FirestoreService` üzerinden kategoriler çekilir.
+- **Riverpod**: Asenkron veri yönetimi için `FutureProvider` kullanıldı.
+- **Flutter Uyumluluğu**: Kod, Flutter 3.x ile uyumludur.
+- **Gelecek Genişletmeler**: Kategoriye özel zikir listesi ekranı eklenebilir.
+
+## Sonraki Adımlar
+- `home_screen.dart`’a kategori filtreleme butonu eklenecek.
+- `profile_screen.dart` oluşturulacak.

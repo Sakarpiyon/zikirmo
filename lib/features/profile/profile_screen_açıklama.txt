@@ -1,0 +1,32 @@
+# profile_screen.dart Açıklama Dosyası
+
+## Dosya Amacı
+`profile_screen.dart`, Zikir Matik uygulamasında kullanıcı profilini gösterir, seviye, rozet ve istatistikler eklendi.
+
+## Dosya Konumu
+- **Yer**: `lib/features/profile/profile_screen.dart`
+- **Klasör Amacı**: `features/profile` klasörü, profil ekranını barındırır.
+
+## İçerik ve Kullanım
+- **ProfileScreen Widget**:
+  - `userProvider`: Kullanıcı verisini çeker.
+  - `build`: Profil resmi, seviye, rozetler ve istatistikler.
+- **UI Elemanları**:
+  - `AppBar`: Başlık ve ayarlar butonu.
+  - `CircleAvatar`: Kullanıcı baş harfi.
+  - `Wrap`: Rozet çipleri.
+  - `Card`: İstatistik kartı.
+- **Kullanım**:
+  - `home_screen.dart`’tan navigasyon ile erişilir.
+
+## Kurulum Adımları
+1. **Dosyayı Proje Yapısına Ekleyin**:
+   - Dosyayı `lib/features/profile` klasörüne yerleştirin.
+2. **Bağımlılıklar**:
+   - `flutter/material.dart`, `easy_localization`, `flutter_riverpod`.
+
+## Önemli Notlar
+- **Güncelleme**: Seviye, rozet ve istatistik gösterimi eklendi.
+- **Flutter Uyumluluğu**: Flutter 3.x ile uyumludur.
+
+# Dosya Sonu: lib/features/profile/profile_screen_açıklama.txt
